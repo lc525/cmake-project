@@ -166,7 +166,7 @@ if(NOT CAPNPROTO_FOUND)
   ExternalProject_Add(capnproto
       GIT_REPOSITORY https://github.com/lc525/capnproto.git
       PREFIX ${CMAKE_SOURCE_DIR}/build/capnproto
-      GIT_TAG cmake_local
+      GIT_TAG cmakeable_local
       CMAKE_ARGS
           -DUSE_SUBMODULE_GTEST=ON
           -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
