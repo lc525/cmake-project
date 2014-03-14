@@ -129,7 +129,7 @@ if(USE_REPO_GTEST OR FALLTHROUGH STREQUAL "1")
   ExternalProject_Add(
       gtest
       PREFIX ${CMAKE_SOURCE_DIR}/build/gtest
-      GIT_REPOSITORY git@gitlab.dtg.cl.cam.ac.uk:lc525/gtest.git
+      GIT_REPOSITORY https://github.com/lc525/gtest.git
       GIT_TAG release-1.7.0
       CMAKE_ARGS
           -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
@@ -164,7 +164,7 @@ find_package(capnproto)
 if(NOT CAPNPROTO_FOUND)
   MESSAGE(" \\-- Capnproto will be downloaded and built in ${CAPNPROTO_PREFIX}")
   ExternalProject_Add(capnproto
-      GIT_REPOSITORY git@gitlab.dtg.cl.cam.ac.uk:lc525/capnproto.git
+      GIT_REPOSITORY https://github.com/lc525/capnproto.git
       PREFIX ${CMAKE_SOURCE_DIR}/build/capnproto
       GIT_TAG cmake_local
       CMAKE_ARGS
