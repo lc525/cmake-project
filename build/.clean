@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Cleaning build dirs ..."
+rm -rf ./*
+# rm -rf ../common/external/gtest/build/*
