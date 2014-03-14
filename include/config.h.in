@@ -11,7 +11,7 @@ namespace @PNAME@{
 
 const unsigned int MAJOR_VERSION = @MAJOR_VERSION@;
 const unsigned int MINOR_VERSION = @MINOR_VERSION@;
-const unsigned int PATCH_VERSION = @PATCH_VERSION@;
+const unsigned int PATCH_VERSION = 0x@PATCH_VERSION@;
 const char VERSION[] = "@VERSION@";
 
 }

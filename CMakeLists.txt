@@ -58,8 +58,8 @@ set(${PNAME}_VERSION
 #  CMAKE MODULES
 #
 ###
-set(CMAKE_MODULE_PATH ${dpac_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
-set(CMAKE_MODULE_PATH ${dpac_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${${PNAME}_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${${PNAME}_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 include(CMakeDependentOption)
 include(FeatureSummary)
 # custom modules
