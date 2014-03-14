@@ -63,7 +63,7 @@ macro(configure_project major minor patch config_tpl_dir config_dir)
   set (MAJOR_VERSION ${major})
   set (MINOR_VERSION ${minor})
   set (PATCH_VERSION ${patch})
-  set (VERSION ${major}.${minor}.${patch})
+  set (VERSION ${major}.${minor}-${patch})
 
   configure_file(
       "${config_tpl_dir}/config.h.in"

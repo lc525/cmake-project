@@ -48,8 +48,6 @@ execute_process(
 )
 string(REPLACE "\n" "" GIT_REV ${GIT_REV})
 set(${PNAME}_PATCH_VERSION ${GIT_REV})
-set(${PNAME}_VERSION
-  ${${PNAME}_MAJOR_VERSION}.${${PNAME}_MINOR_VERSION}-${${PNAME}_PATCH_VERSION})
 
 
 
