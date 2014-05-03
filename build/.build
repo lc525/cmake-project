@@ -3,8 +3,10 @@ CLEAN=0
 TYPE="release"
 VBOSE=0
 JOPT=2
+INSTALL=""
+TARGETS=""
 
-while getopts ":rdcvj:" opt; do
+while getopts ":rdcvit:j:" opt; do
   case $opt in
     r)
       TYPE="release"
@@ -17,6 +19,12 @@ while getopts ":rdcvj:" opt; do
       ;;
     v)
       VBOSE=1
+      ;;
+    i)
+      INSTALL="install"
+      ;;
+    t)
+      TARGETS=$OPTARG
       ;;
     j)
       JOPT=$OPTARG
@@ -33,12 +41,12 @@ then
   ./.clean
 fi
 
-cmake -DCMAKE_BUILD_TYPE=$TYPE -DWITH_DOCS=ON ..
+cmake -DCMAKE_BUILD_TYPE=$TYPE -DCMAKE_INSTALL_PREFIX:PATH=/home/calucian/builds/custom/btest -DWITH_DOCS=ON ..
 
 if [ $VBOSE -eq 1 ]
 then
-  make VERBOSE=1 -j $JOPT
+  make VERBOSE=1 -j $JOPT $TARGETS $INSTALL
 else
-  make -j $JOPT
+  make -j $JOPT $TARGETS $INSTALL
 fi
 

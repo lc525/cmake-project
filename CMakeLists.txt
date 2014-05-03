@@ -7,15 +7,14 @@
 # recommended).
 #
 # Available option list, add -D[OPTION_NAME]=ON to enable:
-#   - WITH_DOCS          - build project API documentation
-#        default:   OFF
-#        requires:  doxygen (build time dependency)
-#
-#   - WITH_SPHINX_MANUAL - if WITH_DOCS is ON, you can set this option
-#                          to build a full html (sphinx) documentation.
-#        default:   ON when WITH_DOCS is ON
+#   - WITH_DOCS          - build project documentation
+#        default:   ON
 #        requires:  python3
 #                   sphinx (sphinx-doc.org)
+#
+#   - WITH_API_DOCS          - build project API documentation
+#        default:   OFF when WITH_DOCS is ON
+#        requires:  doxygen (build time dependency)
 #
 #   - WITH_TESTS         - build the unit tests for each project. run them
 #                          with "make check" after running make.
@@ -34,20 +33,20 @@ set(PNAME generic)
 
 # set default project build options:
 set(DEFAULT_WITH_TESTS OFF)
-set(DEFAULT_WITH_DOCS OFF)
+set(DEFAULT_WITH_DOCS ON)
 
 # General cmake project definition follows. Customize as necessary
 project(${PNAME})
 
 # variable definitions for generating configuration headers
-set(${PNAME}_MAJOR_VERSION 0)
-set(${PNAME}_MINOR_VERSION 1)
+set(PROJECT_MAJOR_VERSION 0)
+set(PROJECT_MINOR_VERSION 1)
 execute_process(
   COMMAND git --git-dir ${${PNAME}_SOURCE_DIR}/.git rev-parse --short HEAD
     OUTPUT_VARIABLE GIT_REV
 )
 string(REPLACE "\n" "" GIT_REV ${GIT_REV})
-set(${PNAME}_PATCH_VERSION ${GIT_REV})
+set(PROJECT_PATCH_VERSION ${GIT_REV})
 
 
 
@@ -72,11 +71,11 @@ include(InternalMacros)
 #
 ###
 option(WITH_DOCS
-  "Build ${PROJECT_NAME} documentation (API doxygen + manual)" OFF)
-cmake_dependent_option(WITH_SPHINX_MANUAL
-  "Generate the html manual" ON "WITH_DOCS" OFF)
+  "Build ${PNAME} documentation" ${DEFAULT_WITH_DOCS})
+cmake_dependent_option(WITH_API_DOCS
+  "Generate doxygen API documentation" OFF "WITH_DOCS" OFF)
 option(WITH_TESTS
-  "Build ${PROJECT_NAME} tests" ON)
+  "Build ${PNAME} tests" ${DEFAULT_WITH_TESTS})
 
 #Google Testing Framework
 # the options are mutually exclusive and are listed in order of preference,
@@ -102,6 +101,7 @@ message("!! Build type: ${CMAKE_BUILD_TYPE}")
 #
 ###
 include(ExternalProject)
+
 # Boost
 set(BOOST_USE_STATIC_LIBS OFF)
 set(BOOST_USE_MULTITHREADED ON)
@@ -139,6 +139,7 @@ if(USE_REPO_GTEST OR FALLTHROUGH STREQUAL "1")
       DOWNLOAD_DIR ${GTEST_PREFIX}
       SOURCE_DIR ${GTEST_PREFIX}
       BINARY_DIR ${GTEST_PREFIX}/build-aux
+      #INSTALL_DIR ${CMAKE_BINARY_DIR}/install
   )
   set(GTEST_LIBRARY "${GTEST_PREFIX}/build-aux/libgtest.a")
   set(GTEST_MAIN_LIBRARY "${GTEST_PREFIX}/build-aux/libgtest_main.a")
@@ -210,9 +211,9 @@ set(CAPNPC_IMPORT_PATH ${CAPNPROTO_PREFIX}/c++/src)
 # BUILD
 #
 ###
-ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build. ")
+ensure_out_of_source_build("${PNAME} requires an out of source build. ")
 
-configure_project(${${PNAME}_MAJOR_VERSION} ${${PNAME}_MINOR_VERSION} ${${PNAME}_PATCH_VERSION}
+configure_project(${PROJECT_MAJOR_VERSION} ${PROJECT_MINOR_VERSION} ${PROJECT_PATCH_VERSION}
                  ${CMAKE_CURRENT_SOURCE_DIR}/include
                  ${CMAKE_CURRENT_BINARY_DIR})
 set(GEN_INCLUDE_DIR ${PROJECT_BINARY_DIR} CACHE STRING "include for gen configs")
@@ -224,6 +225,11 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/external/ezOptionParser")
 
 set (${PNAME}_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set (${PNAME}_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+if (WITH_DOCS)
+  add_subdirectory(docs)
+endif (WITH_DOCS)
+
 
 ###
 ## Project Sources and Tests
