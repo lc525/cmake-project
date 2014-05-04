@@ -158,53 +158,12 @@ if(WITH_TESTS)
 endif(WITH_TESTS)
 
 # Capnproto
-set(CAPNPROTO_PREFIX ${CMAKE_SOURCE_DIR}/external/capnproto)
 find_package(capnproto)
-if(NOT CAPNPROTO_FOUND)
-  MESSAGE(" \\-- Capnproto will be downloaded and built in ${CAPNPROTO_PREFIX}")
-  ExternalProject_Add(capnproto
-      GIT_REPOSITORY https://github.com/lc525/capnproto.git
-      PREFIX ${CMAKE_SOURCE_DIR}/build/capnproto
-      GIT_TAG cmakeable_local
-      CMAKE_ARGS
-          -DUSE_SUBMODULE_GTEST=ON
-          -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
-          -DGTEST_LIBRARY=${GTEST_LIBRARY}
-          -DGTEST_MAIN_LIBRARY=${GTEST_MAIN_LIBRARY}
-          -DGTEST_INCLUDE_DIRECTORIES=${GTEST_INCLUDE_DIRS}
-      INSTALL_COMMAND ""
-      UPDATE_COMMAND ""
-      TMP_DIR ${CMAKE_SOURCE_DIR}/build/capnproto
-      STAMP_DIR ${CMAKE_SOURCE_DIR}/build/capnproto
-      DOWNLOAD_DIR ${CAPNPROTO_PREFIX}
-      SOURCE_DIR ${CAPNPROTO_PREFIX}
-      BINARY_DIR ${CAPNPROTO_PREFIX}/build-aux
-  )
-  ExternalProject_Add_Step(capnproto prebuild
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CAPNPROTO_PREFIX}/build-aux
-    DEPENDEES download
-    DEPENDERS configure
-  )
-  set(CAPNP_LIBRARY "${CAPNPROTO_PREFIX}/build-aux/c++/libcapnp.so")
-  set(CAPNP_RPC_LIBRARY "${CAPNPROTO_PREFIX}/build-aux/c++/libcapnp-rpc.so")
-  set(CAPNPC_LIBRARY "${CAPNPROTO_PREFIX}/build-aux/c++/libcapnpc.so")
-  set(KJ_LIBRARY "${CAPNPROTO_PREFIX}/build-aux/c++/libkj.so")
-  set(KJ_ASYNC_LIBRARY "${CAPNPROTO_PREFIX}/build-aux/c++/libkj-async.so")
-  set(CAPNPC_EXECUTABLE "${CAPNPROTO_PREFIX}/build-aux/c++/capnp")
-  set(CAPNPC_CXX_EXECUTABLE "${CAPNPROTO_PREFIX}/build-aux/c++/capnpc-c++")
-  set(CAPNP_INCLUDE_DIRECTORIES "${CAPNPROTO_PREFIX}/c++/src")
-  list(APPEND CAPNP_LIBRARIES ${CAPNP_RPC_LIBRARY})
-  list(APPEND CAPNP_LIBRARIES ${CAPNP_LIBRARY})
-  list(APPEND CAPNP_LIBRARIES ${CAPNPC_LIBRARY})
-  list(APPEND CAPNP_LIBRARIES ${KJ_ASYNC_LIBRARY})
-  list(APPEND CAPNP_LIBRARIES ${KJ_LIBRARY})
-  if(NOT GTEST_FOUND)
-    add_dependencies(capnproto gtest)
-  endif(NOT GTEST_FOUND)
-endif(NOT CAPNPROTO_FOUND)
-
 set(CAPNPC_IMPORT_PATH ${CAPNPROTO_PREFIX}/c++/src)
 
+# Nanomsg
+# find package or download and build from sources otherwise
+find_package(nanomsg)
 
 ###
 #
